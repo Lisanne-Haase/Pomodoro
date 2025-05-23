@@ -2,7 +2,8 @@
 
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
+    <link rel="stylesheet" href="/css/style.css">
+    <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Pomodoro Task App</title>
   <style>
@@ -13,28 +14,45 @@
   </style>
 </head>
 <body>
-  <h1>Pomodoro Task App</h1>
-  <div>
-    <h2>Tasks</h2>
-    <input id="new-task" placeholder="Neue Aufgabe" />
-    <button onclick="addTask()">Hinzufügen</button>
-    <ul id="task-list"></ul>
-  </div>
 
-  <div>
-    <h2>Pomodoro Timer</h2>
-    <p id="timer">25:00</p>
-    <button onclick="startTimer()">Start</button>
-    <div id="drop-zone" style="margin-top:20px; padding:10px; border:1px solid black; min-height:50px;">
-      Aufgabe hierher ziehen
-    </div>
+<div class="container">
+  <div class="box">
+      <!--adding tasks begin-->
+      <div>
+        <h2>Tasks</h2>
+        <input id="new-task" placeholder="Neue Aufgabe" />
+        <button onclick="addTask()">Hinzufügen</button>
+        <ul id="task-list"></ul>
+      </div>
+      <!--adding tasks end-->
   </div>
+  <div class="box">
+      <!--Timer begin-->
+      <div>
+        <h2>Pomodoro Timer</h2>
+        <p id="timer">25:00</p>
+        <button onclick="startTimer()">Start</button>
+        <div id="drop-zone" style="margin-top:20px; padding:10px; border:1px solid black; min-height:50px;">
+          Aufgabe hierher ziehen
+        </div>
+      </div>
+      <!--Timer end-->
+  </div>
+  <div class="box">
+      <!--sticky notes begin-->
+      <div style="clear:both">
+        <h2>Sticky Notes</h2>
+        <div class="note" contenteditable="true"></div>
+        <div class="note" contenteditable="true"></div>
+      </div>
+      <!--sticky notes end-->
+  </div>
+</div>
 
-  <div style="clear:both">
-    <h2>Sticky Notes</h2>
-    <div class="note" contenteditable="true"></div>
-    <div class="note" contenteditable="true"></div>
-  </div>
+
+
+
+
 
   <script>
     let tasks = [];
