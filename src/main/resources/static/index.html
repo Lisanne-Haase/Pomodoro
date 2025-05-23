@@ -1,0 +1,108 @@
+<!-- <!DOCTYPE html> -->
+
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pomodoro Task App</title>
+  <style>
+    body { font-family: sans-serif; }
+    #task-list li.completed { text-decoration: line-through; }
+    .note { background: yellow; padding: 10px; margin: 5px; width: 150px; height: 100px; float: left; }
+    .highlight { background: lime !important; transition: background 0.5s ease; }
+  </style>
+</head>
+<body>
+  <h1>Pomodoro Task App</h1>
+  <div>
+    <h2>Tasks</h2>
+    <input id="new-task" placeholder="Neue Aufgabe" />
+    <button onclick="addTask()">Hinzufügen</button>
+    <ul id="task-list"></ul>
+  </div>
+
+  <div>
+    <h2>Pomodoro Timer</h2>
+    <p id="timer">25:00</p>
+    <button onclick="startTimer()">Start</button>
+    <div id="drop-zone" style="margin-top:20px; padding:10px; border:1px solid black; min-height:50px;">
+      Aufgabe hierher ziehen
+    </div>
+  </div>
+
+  <div style="clear:both">
+    <h2>Sticky Notes</h2>
+    <div class="note" contenteditable="true"></div>
+    <div class="note" contenteditable="true"></div>
+  </div>
+
+  <script>
+    let tasks = [];
+    let interval;
+    let selectedTaskId = null;
+
+    function fetchTasks() {
+      fetch('/api/tasks')
+        .then(res => res.json())
+        .then(data => {
+          tasks = data;
+          renderTasks();
+        });
+    }
+
+    function renderTasks() {
+      const list = document.getElementById('task-list');
+      list.innerHTML = '';
+      tasks.forEach(task => {
+        const li = document.createElement('li');
+        li.textContent = task.title;
+        li.className = task.completed ? 'completed' : '';
+        li.draggable = true;
+        li.ondragstart = () => selectedTaskId = task.id;
+        li.onclick = () => toggleTask(task.id);
+        list.appendChild(li);
+      });
+    }
+
+    function addTask() {
+      const input = document.getElementById('new-task');
+      fetch('/api/tasks', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ title: input.value })
+      }).then(() => {
+        input.value = '';
+        fetchTasks();
+      });
+    }
+
+    function toggleTask(id) {
+      fetch(`/api/tasks/${id}/toggle`, { method: 'PUT' })
+        .then(() => fetchTasks());
+    }
+
+    document.getElementById('drop-zone').ondragover = e => e.preventDefault();
+    document.getElementById('drop-zone').ondrop = e => {
+      e.preventDefault();
+    };
+
+    function startTimer() {
+      let time = 25 * 60; // 25 minutes
+      clearInterval(interval);
+      interval = setInterval(() => {
+        if (--time <= 0) {
+          clearInterval(interval);
+          document.body.classList.add('highlight');
+          setTimeout(() => document.body.classList.remove('highlight'), 1000);
+          if (selectedTaskId) toggleTask(selectedTaskId);
+        }
+        const minutes = Math.floor(time / 60).toString().padStart(2, '0');
+        const seconds = (time % 60).toString().padStart(2, '0');
+        document.getElementById('timer').textContent = `${minutes}:${seconds}`;
+      }, 1000);
+    }
+
+    fetchTasks();
+  </script>
+</body>
+</html>
