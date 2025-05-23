@@ -1,12 +1,13 @@
 .container {
     display: flex;       /* Puts elements in a row */
     gap: 10px;           /* Adds space between them */
-    padding: 20px;
-    background-color: #eee;
+    padding: 40px;
+    justify-content: center;
+   /* background-color: #eee;*/
 }
 
 .box {
-    padding: 20px;
+    padding: 2000px;/*around the box, not inbetween*/
     background-color: #ccc;
     border: 1px solid #999;
 }
