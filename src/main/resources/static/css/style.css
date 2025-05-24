@@ -7,7 +7,7 @@
 }
 
 .box {
-    padding: 2000px;/*around the box, not inbetween*/
+    padding: 100px;/*around the container, not inbetween*/
     background-color: #ccc;
     border: 1px solid #999;
 }

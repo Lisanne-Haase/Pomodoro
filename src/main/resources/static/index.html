@@ -20,6 +20,7 @@
       <!--adding tasks begin-->
       <div>
         <h2>Tasks</h2>
+          <div id="error-message" style="display: none;"></div>
         <input id="new-task" placeholder="Neue Aufgabe" />
         <button onclick="addTask()">Hinzufügen</button>
         <ul id="task-list"></ul>
@@ -58,14 +59,28 @@
     let tasks = [];
     let interval;
     let selectedTaskId = null;
-
+//updates user interface / updates the UI, fetches tasks for tasks list
     function fetchTasks() {
-      fetch('/api/tasks')
-        .then(res => res.json())
-        .then(data => {
-          tasks = data;
+      fetch('/api/tasks')//HTTP GET request to /api/tasks endpoint
+        .then(res => res.json()) //parse response as JSON
+        .then(data => { //data = contains actual task information from API
+          tasks = data;//data assigned to variable tasks
           renderTasks();
-        });
+        })
+          .catch(error => {//error handling begin
+              console.error('Error fetching tasks:', error);
+              const errorContainer = document.getElementById('error-message');//html element error message
+              if (errorContainer) {
+                  errorContainer.innerHTML = `
+          <div class="error-alert">
+            <strong>Oops! Something went wrong.</strong><br>
+            We couldn't load your tasks right now. Please check your internet connection and try again.
+            <button onclick="fetchTasks()" class="retry-btn">Try Again</button>
+          </div>
+        `;
+                  errorContainer.style.display = 'block';
+              }//error handling end
+          });
     }
 
     function renderTasks() {
