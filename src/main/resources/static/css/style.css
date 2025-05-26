@@ -1,13 +1,74 @@
+
 .container {
-    display: flex;       /* Puts elements in a row */
-    gap: 10px;           /* Adds space between them */
-    padding: 40px;
-    justify-content: center;
-   /* background-color: #eee;*/
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    max-width: 1200px;
+    width: 90%;
+    margin: 0 auto;
+    padding: 1rem;
+    box-sizing: border-box;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
 }
 
-.box {
-    padding: 100px;/*around the container, not inbetween*/
+
+.box { /*belongs to container*/
+    padding: 10px;/*input of the container*/
     background-color: #ccc;
     border: 1px solid #999;
+    justify-content: center;
+    height: 600px;
+}
+
+@media (max-width: 600px) {
+    .container {
+        grid-template-columns: 1fr;  /* Stack vertically at 600px */
+    }
+    .box {
+        height: 300px;  /* or 100%, or auto — depending on your layout needs */
+    }
+}
+
+.sticky-note {
+    background: #fffec8; /* light yellow */
+    padding: 1rem;
+    width: 200px;
+    height: 200px;
+    border: 1px solid #e1c542;
+    box-shadow: 3px 3px 10px rgba(0,0,0,0.2);
+    border-radius: 10px;
+    font-family: 'Comic Sans MS', 'Segoe UI', cursive;
+    transform: rotate(-1deg);
+    transition: transform 0.3s ease;
+    animation: bounceIn 0.6s ease-out;
+}
+
+
+
+.sticky-note:hover {
+    transform: scale(1.03) rotate(0deg);
+    box-shadow: 6px 6px 20px rgba(0,0,0,0.3);
+}
+
+@keyframes bounceIn {
+    0% {
+        transform: scale(0.2) rotate(-10deg);
+        opacity: 0;
+    }
+    60% {
+        transform: scale(1.1) rotate(3deg);
+        opacity: 1;
+    }
+    100% {
+        transform: scale(1) rotate(0deg);
+    }
+}
+
+@media (max-width: 600px) {
+    .sticky-note {
+        width: 130px;
+        height: 130px;
+        font-size: 0.8rem;
+        padding: 0.5rem;
+    }
 }
