@@ -34,7 +34,7 @@
         <p id="timer">25:00</p>
         <button onclick="startTimer()">Start</button>
         <div id="drop-zone" style="margin-top:20px; padding:10px; border:1px solid black; min-height:50px;">
-          Aufgabe hierher ziehen
+          Aufgabe hierher ziehen 
         </div>
       </div>
       <!--Timer end-->
@@ -83,6 +83,7 @@
           });
     }
 
+//displaying tasks
     function renderTasks() {
       const list = document.getElementById('task-list');
       list.innerHTML = '';
@@ -91,11 +92,35 @@
         li.textContent = task.title;
         li.className = task.completed ? 'completed' : '';
         li.draggable = true;
+          li.addEventListener('dragstart', (e) => {
+              e.dataTransfer.setData('text/plain', task.id); // Or task.title
+          });
         li.ondragstart = () => selectedTaskId = task.id;
         li.onclick = () => toggleTask(task.id);
         list.appendChild(li);
       });
     }
+
+    const dropZone = document.getElementById('drop-zone');
+
+    dropZone.addEventListener('dragover', (e) => {
+        e.preventDefault(); // Allows drop
+        dropZone.style.backgroundColor = "#e0ffe0"; // Optional: visual feedback
+    });
+
+    dropZone.addEventListener('dragleave', () => {
+        dropZone.style.backgroundColor = "";
+    });
+
+    dropZone.addEventListener('drop', (e) => {
+        e.preventDefault();
+        const taskId = e.dataTransfer.getData('text/plain');
+        const task = tasks.find(t => t.id == taskId);
+        if (task) {
+            dropZone.textContent = `${task.title}`;
+            selectedTaskId = task.id; // Store the currently active task
+        }
+    });
 
     function addTask() {
       const input = document.getElementById('new-task');
@@ -131,7 +156,7 @@
         }
         const minutes = Math.floor(time / 60).toString().padStart(2, '0');
         const seconds = (time % 60).toString().padStart(2, '0');
-        document.getElementById('timer').textContent = `${minutes}:${seconds}`;
+        document.getElementById('timer').textContent = `${minutes}:${seconds}`; //displaying time
       }, 1000);
     }
 
