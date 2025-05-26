@@ -153,20 +153,49 @@
       e.preventDefault();
     };
 
+    //30 minute work session
     function startTimer() {
       let time = 25 * 60; // 25 minutes
       clearInterval(interval);
       interval = setInterval(() => {
-        if (--time <= 0) {
+        if (--time <= 0) { //time over
           clearInterval(interval);
-          document.body.classList.add('highlight');
+          dropZone.textContent = ""; //dropZone empty again
+            dropZone.style.backgroundColor = "";
+            document.body.classList.add('highlight');
           setTimeout(() => document.body.classList.remove('highlight'), 1000);
           if (selectedTaskId) toggleTask(selectedTaskId);
+          startBreak();
+
         }
         const minutes = Math.floor(time / 60).toString().padStart(2, '0');
         const seconds = (time % 60).toString().padStart(2, '0');
         document.getElementById('timer').textContent = `${minutes}:${seconds}`; //displaying time
       }, 1000);
+
+    }
+
+    //5 minute break begin
+    function startBreak(){
+        let time = 5 * 60; // 5 minutes
+        dropZone.textContent = "take a break";
+
+        clearInterval(interval);
+        interval = setInterval(() => {
+            if (--time <= 0) { //time over
+                clearInterval(interval);
+                dropZone.style.backgroundColor = "";
+                document.body.classList.add('highlight');
+                setTimeout(() => document.body.classList.remove('highlight'), 1000);
+                dropZone.textContent = "";
+                document.getElementById('timer').textContent = "25:00"; //displaying time
+                return
+            }
+            const minutes = Math.floor(time / 60).toString().padStart(2, '0');
+            const seconds = (time % 60).toString().padStart(2, '0');
+            document.getElementById('timer').textContent = `${minutes}:${seconds}`; //displaying time
+        }, 1000);
+
     }
 
     fetchTasks();
