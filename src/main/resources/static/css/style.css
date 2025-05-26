@@ -14,7 +14,7 @@
 
 .box { /*belongs to container*/
     padding: 10px;/*input of the container*/
-    background-color: #ccc;
+    /*background-color: "";*/
     border: 1px solid #999;
     justify-content: center;
     height: 600px;
