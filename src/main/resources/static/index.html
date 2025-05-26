@@ -8,7 +8,7 @@
   <title>Pomodoro Task App</title>
   <style>
     body { font-family: sans-serif; }
-    #task-list li.completed { text-decoration: line-through; }
+     #task-list li.completed { text-decoration: line-through; }
     .note { background: yellow; padding: 10px; margin: 5px; width: 150px; height: 100px; float: left; }
     .highlight { background: lime !important; transition: background 0.5s ease; }
   </style>
@@ -21,7 +21,7 @@
       <div>
         <h2>Tasks</h2>
           <div id="error-message" style="display: none;"></div>
-        <input id="new-task" placeholder="Neue Aufgabe" />
+          <label for="new-task"></label><input id="new-task" placeholder="Neue Aufgabe" />
         <button onclick="addTask()">Hinzufügen</button>
         <ul id="task-list"></ul>
       </div>
@@ -34,7 +34,7 @@
         <p id="timer">25:00</p>
         <button onclick="startTimer()">Start</button>
         <div id="drop-zone" style="margin-top:20px; padding:10px; border:1px solid black; min-height:50px;">
-          Aufgabe hierher ziehen 
+          Aufgabe hierher ziehen
         </div>
       </div>
       <!--Timer end-->
@@ -59,6 +59,7 @@
     let tasks = [];
     let interval;
     let selectedTaskId = null;
+
 //updates user interface / updates the UI, fetches tasks for tasks list
     function fetchTasks() {
       fetch('/api/tasks')//HTTP GET request to /api/tasks endpoint
@@ -92,8 +93,9 @@
         li.textContent = task.title;
         li.className = task.completed ? 'completed' : '';
         li.draggable = true;
-          li.addEventListener('dragstart', (e) => {
-              e.dataTransfer.setData('text/plain', task.id); // Or task.title
+          li.addEventListener('dragstart', (e) => { //event listener that fires when the user starts dragging the task
+              e.dataTransfer.setData('text/plain', task.id); //Stores the task's ID as plain text in the drag event
+          console.log("dragstart");
           });
         li.ondragstart = () => selectedTaskId = task.id;
         li.onclick = () => toggleTask(task.id);
@@ -103,20 +105,27 @@
 
     const dropZone = document.getElementById('drop-zone');
 
-    dropZone.addEventListener('dragover', (e) => {
+    dropZone.addEventListener('dragover', (e) => { //function gets executed repeatedly while a draggable item is over the drop zone
         e.preventDefault(); // Allows drop
-        dropZone.style.backgroundColor = "#e0ffe0"; // Optional: visual feedback
+        console.log("dragover");
+        dropZone.style.backgroundColor = "#e0ffe0"; // visual feedback
     });
 
-    dropZone.addEventListener('dragleave', () => {
-        dropZone.style.backgroundColor = "";
+    dropZone.addEventListener('dragleave', () => {//function gets executed If the draggable item leaves the drop zone without being dropped
+        console.log("dragleave");
+        dropZone.style.backgroundColor = "";//this resets the background to its default
     });
 
-    dropZone.addEventListener('drop', (e) => {
-        e.preventDefault();
-        const taskId = e.dataTransfer.getData('text/plain');
-        const task = tasks.find(t => t.id == taskId);
+    dropZone.addEventListener('drop', (e) => {//function gets executed if user releases the dragged item over the drop zone
+        console.log("drop begin");
+        e.preventDefault();// Allows drop
+        const taskId = e.dataTransfer.getData('text/plain'); //storing task ID
+        console.log(taskId);
+        const task = tasks.find(t => t.id == taskId); //tasks array for the one with the matching ID for further attributes of task e.g. name
+        const tmpTask = tasks.at(1);
+        console.log(tmpTask);
         if (task) {
+            console.log("Test");
             dropZone.textContent = `${task.title}`;
             selectedTaskId = task.id; // Store the currently active task
         }
